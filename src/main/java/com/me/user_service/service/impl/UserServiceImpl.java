@@ -15,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 import com.me.user_service.entities.Hotel;
 import com.me.user_service.entities.Rating;
 import com.me.user_service.entities.User;
+import com.me.user_service.external.services.HotelService;
 import com.me.user_service.repositories.UserRepository;
 import com.me.user_service.services.UserService;
 
@@ -26,6 +27,9 @@ public class UserServiceImpl implements UserService{
 	
 	@Autowired
 	private RestTemplate restTemplate;
+	
+	@Autowired
+	private HotelService hotelService;
 
 	@Override
 	public User saveUser(User user) {
@@ -48,8 +52,9 @@ public class UserServiceImpl implements UserService{
 		 List<Rating> ratings2= new ArrayList<>();
 			
 			  for(Rating rating:ratings1) { 
-				  Hotel hotel=restTemplate.getForObject("http://HOTEL-SERVICE/hotel/"+rating.getHotelId()
-			  ,Hotel.class); 
+//				  Hotel hotel=restTemplate.getForObject("http://HOTEL-SERVICE/hotel/"+rating.getHotelId()
+//			  ,Hotel.class); 
+				  Hotel hotel = hotelService.getHotel(rating.getHotelId());
 				 rating.setHotel(hotel);
 				 ratings2.add(rating); 
 				 }

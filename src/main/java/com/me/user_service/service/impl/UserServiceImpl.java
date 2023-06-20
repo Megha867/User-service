@@ -43,12 +43,12 @@ public class UserServiceImpl implements UserService{
 	public User getUser(String user_id) {
 		
 		 User user = userRepository.findById(user_id).get();
-		 Rating[] ratings=restTemplate.getForObject("http://localhost:8083/rating/user/"+user_id, Rating[].class);
+		 Rating[] ratings=restTemplate.getForObject("http://RATING-SERVICE/rating/user/"+user_id, Rating[].class);
 		 List<Rating> ratings1=Arrays.stream(ratings).toList();
 		 List<Rating> ratings2= new ArrayList<>();
 			
 			  for(Rating rating:ratings1) { 
-				  Hotel hotel=restTemplate.getForObject("http://localhost:8082/hotel/"+rating.getHotelId()
+				  Hotel hotel=restTemplate.getForObject("http://HOTEL-SERVICE/hotel/"+rating.getHotelId()
 			  ,Hotel.class); 
 				 rating.setHotel(hotel);
 				 ratings2.add(rating); 

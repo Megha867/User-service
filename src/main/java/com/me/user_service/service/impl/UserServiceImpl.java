@@ -16,6 +16,7 @@ import com.me.user_service.entities.Hotel;
 import com.me.user_service.entities.Rating;
 import com.me.user_service.entities.User;
 import com.me.user_service.external.services.HotelService;
+import com.me.user_service.external.services.RatingService;
 import com.me.user_service.repositories.UserRepository;
 import com.me.user_service.services.UserService;
 
@@ -30,6 +31,9 @@ public class UserServiceImpl implements UserService{
 	
 	@Autowired
 	private HotelService hotelService;
+	
+	@Autowired
+	private RatingService ratingService;
 
 	@Override
 	public User saveUser(User user) {
@@ -47,14 +51,16 @@ public class UserServiceImpl implements UserService{
 	public User getUser(String user_id) {
 		
 		 User user = userRepository.findById(user_id).get();
-		 Rating[] ratings=restTemplate.getForObject("http://RATING-SERVICE/rating/user/"+user_id, Rating[].class);
+		// List<Rating> rating_list = ratingService.getListOfRatings();
+		 //Rating[] ratings= (Rating[]) rating_list.toArray();
+		 Rating[] ratings= restTemplate.getForObject("http://RATING-SERVICE/rating/user/"+user_id, Rating[].class);
 		 List<Rating> ratings1=Arrays.stream(ratings).toList();
 		 List<Rating> ratings2= new ArrayList<>();
 			
 			  for(Rating rating:ratings1) { 
-//				  Hotel hotel=restTemplate.getForObject("http://HOTEL-SERVICE/hotel/"+rating.getHotelId()
-//			  ,Hotel.class); 
-				  Hotel hotel = hotelService.getHotel(rating.getHotelId());
+				  Hotel hotel=restTemplate.getForObject("http://HOTEL-SERVICE/hotel/"+rating.getHotelId()
+			  ,Hotel.class); 
+				  //Hotel hotel = hotelService.getHotel(rating.getHotelId());
 				 rating.setHotel(hotel);
 				 ratings2.add(rating); 
 				 }
